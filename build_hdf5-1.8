@@ -1,0 +1,16 @@
+#!/bin/bash
+
+VERSION=1.8.21
+
+# PATH=/c/ProgramData/MATLAB/SupportPackages/R2022a/3P.instrset/mingw_w64.instrset/bin:$PATH
+./configure --host=x86_64-w64-mingw32 --build=x86_64-w64-mingw32 --disable-hl --prefix=$HOME/local/hdf5-$VERSION --disable-shared CFLAGS='-m64 -fPIC'
+# CPPFLAGS='-D_GNU_SOURCE=1'
+
+perl -e 's/(#define H5_HAVE_GETCONSOLESCREENBUFFERINFO 1)/\/* $1 *\//g' -pi  src/H5pubconf.h
+perl -e 's/(#define H5_HAVE_WINSOCK2_H 1)/\/* $1 *\//g' -pi  src/H5*.h
+perl -e 's/(\/\* #undef H5_ssize_t \*\/)/$1\n\n#ifndef H5_HAVE_WIN32_API\n#ifdef WIN32 \/* defined for all windows systems *\/\n#define H5_HAVE_WIN32_API 1\n#endif\n#endif\n\n#ifndef H5_HAVE_MINGW\n#ifdef __MINGW32__ \/*defined for all MinGW compilers *\/\n#define H5_HAVE_MINGW 1\n#endif\n#endif\n/g' -pi src/H5pubconf.h
+
+perl -e 's/H5_HAVE_WIN32_API/H5_HAVE_WINSOCK2_H/g' -pi  test/h5test.c
+perl -e 's/HDsetenv\([^\)]+\)/0/g' -pi test/external.c
+
+make -j4 install
