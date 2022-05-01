@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Build HDF5 for Linux
+
+VERSION=1.10.8
+
+curl https://support.hdfgroup.org/ftp/HDF5/prev-releases/hdf5-1.10/hdf5-$VERSION/src/hdf5-$VERSION.tar.bz2 | tar jx
+
+cd hdf5-$VERSION
+
+./configure --disable-shared --prefix=$PWD CFLAGS=-fPIC
+
+make -j4 install
+
+cd ..
+tar zcvf ../hdf5-$VERSION-glna64.tgz hdf5-$VERSION/include hdf5-$VERSION/lib/libhdf5.a
