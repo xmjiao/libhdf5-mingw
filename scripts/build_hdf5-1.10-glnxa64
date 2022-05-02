@@ -13,4 +13,4 @@ cd hdf5-$VERSION
 make -j4 install
 
 cd ..
-tar zcvf ../hdf5-$VERSION-glna64.tgz hdf5-$VERSION/include hdf5-$VERSION/lib/libhdf5.a
+tar zcvf ../hdf5-$VERSION-glnxa64.tgz hdf5-$VERSION/include hdf5-$VERSION/lib/libhdf5.a
